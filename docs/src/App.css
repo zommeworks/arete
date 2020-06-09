@@ -137,7 +137,7 @@ body {
   padding: 0;
   border-spacing: 0;
 }
-#baseplate {
+#root {
   position: relative;
   width: var(--size-base);
   height: 100vh;

@@ -24,6 +24,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>React App</title>
     <style>
       @font-face {
@@ -46,6 +47,7 @@
         --color-blue: #0091FF;
         --color-silver: rgba(0, 23, 85, 0.05);
         --color-lightgray: rgba(0, 23, 85, 0.2);
+        --color-white: #ffffff;
         --lineheight-subtitle: calc(32/24);
         --size-icon: 40px;
         --size-font-subtitle: 24px;
@@ -60,6 +62,7 @@
         --margin-base: 32px;
         --magrin-boxtop: 56px;
         --margin-boxbottom: 50px;
+        --speed-normal: 0.5s;
       }
       @media screen and (min-width: 640px) {
         :root {
@@ -81,6 +84,7 @@
       @media screen and (min-width: 640px) and (min-aspect-ratio: 1/1) {
         .box-agent > p {
           display: inline-block;
+          position: relative;
           vertical-align: middle;
           -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
@@ -104,10 +108,14 @@
       .theme-light {
         background-color: var(--color-silver);
         color: var(--color-navy);
+        -webkit-transition: background-color var(--speed-normal);
+        transition: background-color var(--speed-normal)
       }
       .theme-dark {
         background-color: var(--color-lightgray);
         color: var(--color-white);
+        -webkit-transition: background-color var(--speed-normal);
+        transition: background-color var(--speed-normal)
       }
       p {
         background-color: transparent !important;
@@ -123,11 +131,13 @@
         margin: 0;
         padding: 0;
         border-spacing: 0;
+        overflow: hidden;
       }
       #baseplate {
         position: relative;
         width: var(--size-base);
         height: 100vh;
+        overflow: visible;
         box-sizing: border-box;
         padding: 0 var(--margin-base);
         margin: 0 auto;
@@ -140,6 +150,7 @@
         font-family: "nanumSquareRound";
         font-size: var(--size-font-subtitle) ;
         line-height: 1.33;
+        z-index: 1;
       }
       .box-controller {
         position: fixed;
@@ -176,19 +187,57 @@
         pointer-events: none !important;
       }
       .button-agent {
-        background-color: var(--color-blue);
         width: var(--size-button-m);
         height: var(--size-button-m);
         border-radius: calc(100*100vw);
+        background-color: transparent;
+        /*
+        left: calc(var(--size-button-m)/2);
+        top: calc(var(--size-button-m)/2);
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        -webkit-transition: width var(--speed-normal), height var(--speed-normal);
+        transition: width 0.5s, height 0.5s;
+        */
       }
-      .button-agent.idle::after {
+      .button-agent::before {
+        content: "";
+        position: absolute;
+        width: var(--size-button-m);
+        height: var(--size-button-m);
+        background-color: var(--color-blue);
+        border-radius: calc(100*100vw);
+        left: 50%;
+        top: 50%;
+        z-index: -1;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        -webkit-transition: width var(--speed-normal), height var(--speed-normal);
+        transition: width 0.5s, height 0.5s;
+
+      }
+      .button-agent::after {
         content: "";
         width: var(--size-button-m);
         height: var(--size-button-m);
         position: absolute;
-        left: 0;
-        top: 0;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+
+      }
+      .button-agent.status-idle {
+      }
+      .button-agent.status-idle::after {
         background-image: url("src/agent-idle.svg");
+      }
+      .button-agent.status-listening::before {
+        width: max(250vw, 250vh);
+        height: max(250vw, 250vh);
+      }
+      .button-agent.status-listening::after {
+        background-image: url("src/agent-listening.svg");
       }
       .button-small {
         width: var(--size-button-s);
@@ -241,8 +290,8 @@
     <div id="root"></div>
     <div id="baseplate">
       <div class="box-agent">
-        <button class="button-agent idle"></button>
-        <p class="theme-light">아시는 동물의 이름을<br>모두 말해주세요</p>
+        <button id="btnAgent" class="button-agent status-idle"></button>
+        <p id="txtSubtitle" class="theme-light">아시는 동물의 이름을<br>모두 말해주세요</p>
       </div>
       <div class="box-text theme-light"></div>
       <div class="box-content"></div>
@@ -269,4 +318,59 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+  <script type="text/javascript">
+  function toggleAgent(target){
+    if($(target).hasClass('status-idle')){
+      $(target).removeClass('status-idle');
+      $(target).addClass('status-listening');
+      $('.theme-light').addClass('theme-dark');
+      $('.theme-light').removeClass('theme-light');
+      loadSound('sfx_listening');
+      playSound(ttsBuffer);
+    }
+    else if($(target).hasClass('status-listening')){
+      $(target).removeClass('status-listening');
+      $(target).addClass('status-idle');
+      $('.theme-dark').addClass('theme-light');
+      $('.theme-dark').removeClass('theme-dark');
+    }
+  }
+
+
+  /* web audio functions */
+  var ttsBuffer = null;
+  // Fix up prefixing
+  window.AudioContext = window.AudioContext || window.webkitAudioContext;
+  var context = new AudioContext();
+
+  function loadSound(filename) {
+    var request = new XMLHttpRequest();
+    var url = '../src/sfx/'+filename+'.wav';
+    request.open('GET', url, true);
+    request.responseType = 'arraybuffer';
+    // Decode asynchronously
+    request.onload = function() {
+      context.decodeAudioData(request.response, function(buffer) {
+        ttsBuffer = buffer;
+      }, onError);
+    }
+    request.send();
+  }
+
+  function playSound(buffer) {
+    var source = context.createBufferSource(); // creates a sound source
+    source.buffer = buffer;                    // tell the source which sound to play
+    source.connect(context.destination);       // connect the source to the context's destination (the speakers)
+    source.start(0);                           // play the source now
+                                               // note: on older systems, may have to use deprecated noteOn(time);
+  }
+
+
+  /* execution */
+  $(document).ready(function(){
+  });
+  $('#btnAgent').click(function(){
+    toggleAgent('#btnAgent');
+  });
+  </script>
 </html>
