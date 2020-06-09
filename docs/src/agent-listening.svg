@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.1.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 80 80" style="enable-background:new 0 0 80 80;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#0091FF;}
+	.st2{fill:#0091FF;}
+	.st3{clip-path:url(#SVGID_2_);}
+</style>
+<g>
+	<circle class="st0" cx="40" cy="40" r="40"/>
+</g>
+<path class="st1" d="M40,24.83c3.31,0,6,2.83,6,6.33v12.34c0,3.49-2.69,6.33-6,6.33s-6-2.83-6-6.33V31.16
+	C34,27.67,36.69,24.83,40,24.83z"/>
+<path class="st2" d="M49.3,37c-0.83,0-1.5,0.67-1.5,1.5V44c0,4.23-3.5,7.67-7.8,7.67s-7.8-3.44-7.8-7.67v-5.5
+	c0-0.83-0.67-1.5-1.5-1.5h0c-0.83,0-1.5,0.67-1.5,1.5V44c0,5.89,4.84,10.67,10.8,10.67S50.8,49.89,50.8,44v-5.5
+	C50.8,37.67,50.13,37,49.3,37L49.3,37z"/>
+<g>
+	<defs>
+		<path id="SVGID_1_" d="M40,60L40,60c1.1,0,2-0.79,2-1.77v-3.46c0-0.98-0.9-1.77-2-1.77h0c-1.1,0-2,0.79-2,1.77v3.46
+			C38,59.21,38.9,60,40,60z"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+	</clipPath>
+	<g class="st3">
+		<rect x="30.59" y="46.44" class="st2" width="18.81" height="20.12"/>
+	</g>
+</g>
+</svg>
