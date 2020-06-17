@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './App.css';
 import Interaction from './interaction.js';
-//import Testscript from './testscript'
-
+import data from './testscript.json'
+import $ from 'jquery';
 
 
 /*
@@ -71,6 +71,40 @@ import Interaction from './interaction.js';
   3: audio end
 **/
 
+function setData(source, target){
+  
+}
+
+const currentData = {
+  /*
+  name: '',
+  message: 'this is a dummy text',
+  displayMessage: 'dummy text',
+  displayOnly: 0,
+  hasImage: 0,
+  epd: 0,
+  answerEntity: '',
+  maxTimeout: 0,
+  duration: 0,
+  currentPlayTime: 0,
+  playStatus: 0,
+  theme: 'light',
+  */
+  name: 'TASK_J2_01_statement_1',
+  message: '지금부터 몇 개의 그림이 표시될 것입니다. 그림은 한번에 하나씩 나옵니다. 각 그림의 이름을 말해 주시면 됩니다.',
+  displayMessage: '그림의 이름을 말해주세요.',
+  displayOnly: 1,
+  hasImage: 0,
+  epd: 0,
+  answerEntity: '',
+  maxTimeout: 0,
+  duration: 0,
+  currentPlayTime: 0,
+  playStatus: 0,
+  theme: 'light',
+};
+const nextData = currentData;
+
 class Baseplate extends React.Component {
   constructor(props) {
     super(props);
@@ -92,6 +126,13 @@ class Baseplate extends React.Component {
     this.setState(currentData);
   }
   render() {
+    let docID = window.location.hash.split('#');
+    $.each(data.list, function(i){
+      if(data.list[i].name == docID[1]){
+        currentData = data.list[i];
+        console.log(currentData);
+      }
+    });
     return(
       <div id="baseplate">
         <BoxAgent
@@ -109,39 +150,6 @@ class Baseplate extends React.Component {
   }
 }
 
-
-
-const currentData = {
-  name: '',
-  message: 'this is a dummy text',
-  displayMessage: 'dummy text',
-  displayOnly: 0,
-  hasImage: 0,
-  epd: 0,
-  answerEntity: '',
-  maxTimeout: 0,
-  duration: 0,
-  currentPlayTime: 0,
-  playStatus: 0,
-  theme: 'light',
-};
-
-class AudioController extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = currentData;
-  }
-  getData = () => {
-
-  }
-  /*
-  render() {
-    return(
-      true;
-    );
-  }
-  */
-}
 
 
 
@@ -241,6 +249,37 @@ class TextSubtitle extends React.Component {
   }
 }
 
+/*
+class AudioController extends React.Component {
+
+}
+class AudioComp extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  static getDerivedStateFromProps(props, state) {
+    return {
+      name: props.name,
+      message: props.message,
+      displayMessage: props.displayMessage,
+      displayOnly: props.displayOnly,
+      hasImage: props.hasImage,
+      epd: props.epd,
+      answerEntity: props.answerEntity,
+      maxTimeout: props.maxTimeout,
+      duration: props.duration,
+      currentPlayTime: props.currentPlayTime,
+      playStatus: props.playStatus,
+      theme: props.theme
+    };
+  }
+  render() {
+    return(
+
+    );
+  }
+}
+*/
 
 /* * * * * * * * * * * * * * * *
  * BoxController and children  *
