@@ -1,8 +1,8 @@
 import $ from 'jquery';
 
 /* web audio functions */
-window.addEventListener('load', init, false);
-function init() {
+window.addEventListener('load', initAudio, false);
+function initAudio() {
   try {
     // Fix up for prefixing
     window.AudioContext = window.AudioContext||window.webkitAudioContext;

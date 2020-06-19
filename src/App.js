@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './App.css';
-import Interaction from './interaction.js';
 import data from './testscript.json'
 import $ from 'jquery';
 
@@ -71,68 +70,139 @@ import $ from 'jquery';
   3: audio end
 **/
 
-function setData(source, target){
-  
+
+
+/* * * * * * * * * * *
+ * global variables  *
+ * * * * * * * * * * */
+
+const currentData = {};
+const nextData = {};
+var ttsBuffer = null;
+// webAudioAPI Fix up prefixing
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+var context = new AudioContext();
+
+
+
+/* * * * * * * * * * * * *
+ * webAudioAPI functions *
+ * * * * * * * * * * * * */
+
+function initAudio() {
+  try {
+    // Fix up for prefixing
+    window.AudioContext = window.AudioContext||window.webkitAudioContext;
+    context = new AudioContext();
+  }
+  catch(e) {
+    alert('Web Audio API is not supported in this browser');
+  }
 }
 
-const currentData = {
-  /*
-  name: '',
-  message: 'this is a dummy text',
-  displayMessage: 'dummy text',
-  displayOnly: 0,
-  hasImage: 0,
-  epd: 0,
-  answerEntity: '',
-  maxTimeout: 0,
-  duration: 0,
-  currentPlayTime: 0,
-  playStatus: 0,
-  theme: 'light',
-  */
-  name: 'TASK_J2_01_statement_1',
-  message: '지금부터 몇 개의 그림이 표시될 것입니다. 그림은 한번에 하나씩 나옵니다. 각 그림의 이름을 말해 주시면 됩니다.',
-  displayMessage: '그림의 이름을 말해주세요.',
-  displayOnly: 1,
-  hasImage: 0,
-  epd: 0,
-  answerEntity: '',
-  maxTimeout: 0,
-  duration: 0,
-  currentPlayTime: 0,
-  playStatus: 0,
-  theme: 'light',
-};
-const nextData = currentData;
+function loadSound(filename) {
+  var request = new XMLHttpRequest();
+  var url = '../src/sfx/'+filename+'.mp3';
+  request.open('GET', url, true);
+  request.responseType = 'arraybuffer';
+  // Decode asynchronously
+  request.onload = function() {
+    context.decodeAudioData(request.response, function(buffer) {
+      ttsBuffer = buffer;
+    }, onError);
+  }
+  request.send();
+}
+
+function onError(e) {
+  console.log("error loading an audio file.", e);
+}
+
+function playSound(buffer) {
+  var source = context.createBufferSource(); // creates a sound source
+  source.buffer = buffer;                    // tell the source which sound to play
+  source.connect(context.destination);       // connect the source to the context's destination (the speakers)
+  source.start(0);                           // play the source now
+                                             // note: on older systems, may have to use deprecated noteOn(time);
+}
+
+
+/* execution */
+
+//functions
+function initData(){
+  try {
+    let docID = window.location.hash.split('#');
+    $.each(data.list, function(i){
+      if(data.list[i].name === docID[1]){
+        overwriteData(data.list[i], currentData);
+        if(data.list[i].name.match(/(prompt|statement)/)) {
+        }
+      }
+    });
+  }
+  catch(e) {
+    alert('failed to load data');
+  }
+}
+function overwriteData(source, target) {
+  target.name = source.name;
+  target.message = source.message;
+  target.displayMessage = source.displayMessage;
+  target.displayOnly = source.displayOnly;
+  target.hasImage = source.hasImage;
+  target.epd = source.epd;
+  target.answerEntity = source.answerEntity;
+  target.maxTimeout = source.maxTimeout;
+  //target.duration = source.duration;
+}
 
 class Baseplate extends React.Component {
   constructor(props) {
     super(props);
-    this.state = currentData;
+    this.state = {
+      name: '',
+      message: '',
+      displayMessage: '',
+      displayOnly: 0,
+      hasImage: 0,
+      epd: 0,
+      answerEntity: '',
+      maxTimeout: 0,
+      duration: 0,
+      currentPlayTime: 0,
+      playStatus: 0,
+      theme: 'light'
+    }
     this.handler = this.handler.bind(this);
   }
   static getDerivedStateFromProps(props, state) {
-    return currentData;
+    return {
+      name: props.name,
+      message: props.message,
+      displayMessage: props.displayMessage,
+      displayOnly: props.displayOnly,
+      hasImage: props.hasImage,
+      epd: props.epd,
+      answerEntity: props.answerEntity,
+      maxTimeout: props.maxTimeout,
+    };
   }
   handler() {
-    if(currentData.playStatus === 2) {
-      currentData.playStatus = 3;
-      currentData.theme = 'light';
+    if(this.state.playStatus === 2) {
+      this.setState({
+        playStatus: 3,
+        theme: 'light'
+      });
     }
     else {
-      currentData.playStatus = 2;
-      currentData.theme = 'dark';
+      this.setState({
+        playStatus: 2,
+        theme: 'dark'
+      });
     }
-    this.setState(currentData);
   }
   render() {
-    let docID = window.location.hash.split('#');
-    $.each(data.list, function(i){
-      if(data.list[i].name == docID[1]){
-        currentData = data.list[i];
-        console.log(currentData);
-      }
-    });
     return(
       <div id="baseplate">
         <BoxAgent
@@ -190,7 +260,7 @@ class ButtonAgent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      playStatus: 0
+      playStatus: 0,
     };
   }
   static getDerivedStateFromProps(props, state) {
@@ -223,18 +293,19 @@ class ButtonAgent extends React.Component {
     );
   }
 }
+
 class TextSubtitle extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       theme: 'light',
-      displayMessage: "dummy text"
+      displayMessage: 'dummy text'
     };
   }
   static getDerivedStateFromProps(props, state) {
     return {
       theme: props.theme,
-      message: props.message
+      displayMessage: props.displayMessage
     };
   }
   render() {
@@ -298,7 +369,7 @@ class BoxController extends React.Component {
     };
   }
   setTheme = () => {
-    this.setState({ theme: this.state.theme == 'light' ? 'dark' : 'light' });
+    this.setState({ theme: this.state.theme === 'light' ? 'dark' : 'light' });
   }
   render() {
     return(
@@ -323,7 +394,7 @@ class ButtonSmall extends React.Component {
     this.state = {
       theme: 'light',
       clicked: false
-    };
+    }
   }
   static getDerivedStateFromProps(props, state) {
     return {
@@ -348,6 +419,8 @@ class ButtonSmall extends React.Component {
 
 
 function App() {
+  //initAudio();
+  initData();
   const element = <Baseplate
     name={currentData.name}
     message={currentData.message}
@@ -357,10 +430,6 @@ function App() {
     epd={currentData.epd}
     answerEntity={currentData.answerEntity}
     maxTimeout={currentData.maxTimeout}
-    duration={currentData.duration}
-    currentPlayTime={currentData.currentPlayTime}
-    playStatus={currentData.playStatus}
-    theme={currentData.theme}
   />;
   return(element);
 }
