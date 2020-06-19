@@ -100,9 +100,9 @@ function initAudio() {
   }
 }
 
-function loadSound(filename) {
+function loadTTS(filename) {
   var request = new XMLHttpRequest();
-  var url = '../src/sfx/'+filename+'.mp3';
+  var url = '../src/tts/'+filename+'.mp3';
   request.open('GET', url, true);
   request.responseType = 'arraybuffer';
   // Decode asynchronously
@@ -144,6 +144,7 @@ function initData(){
   catch(e) {
     alert('failed to load data');
   }
+  loadTTS(currentData.name);
 }
 function overwriteData(source, target) {
   target.name = source.name;
@@ -419,7 +420,7 @@ class ButtonSmall extends React.Component {
 
 
 function App() {
-  //initAudio();
+  initAudio();
   initData();
   const element = <Baseplate
     name={currentData.name}
