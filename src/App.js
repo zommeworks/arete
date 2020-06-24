@@ -1,5 +1,5 @@
 import React from 'react';
-import Sound from 'react-sound';
+import Sound from 'react-sound'; //to install: npm install react-sound
 import styles from './App.css';
 import data from './testscript.json'
 import $ from 'jquery';
@@ -8,57 +8,58 @@ import $ from 'jquery';
 /*
   UI scheme
 
- ┏━━━━ baseplate ━━━━┓
- ┃  ┏━━━━ AudioController ━━━━┓
- ┃  ┃
- ┃  ┗━━━━━━━━┛  ┃
- ┃  ┏━━━━ BoxAgent ━━━━━━━━━━━━━━━━━━━━━┓
- ┃  ┃  ┏━━━━ ButtonAgent ━━━━━━━━━━━━┓  ┃
- ┃  ┃  ┃  props: voiceInput (0/1)    ┃  ┃
- ┃  ┃  ┃  state: voiceInput (0/1)    ┃  ┃
- ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
- ┃  ┃  ┏━━━━ TextSubtitle ━━━━━━━━━━━┓  ┃
- ┃  ┃  ┃  props: text (string)       ┃  ┃
- ┃  ┃  ┃         voiceInput (0/1)    ┃  ┃
- ┃  ┃  ┃  state: voiceInput (0/1)    ┃  ┃
- ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
- ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
- ┃
- ┃  ┏━━━━ BoxController ━━━━━━━━━━━━━━━━━━━━━━━━┓
- ┃  ┃  props: theme (light / dark)              ┃
- ┃  ┃         voiceInput (0/1)                  ┃
- ┃  ┃  state: theme (light / dark)              ┃
- ┃  ┃         voiceInput (0/1)                  ┃
- ┃  ┃  ┏━━━━ div.box-bar ━━━━━━━━━━━━━━━━━━━━┓  ┃
- ┃  ┃  ┃  ┏━━━━ ProgressBar ━━━━━━━━━━━━━━┓  ┃  ┃
- ┃  ┃  ┃  ┃  props: voiceInput (0/1)      ┃  ┃  ┃
- ┃  ┃  ┃  ┃         maxTimeout (int)      ┃  ┃  ┃
- ┃  ┃  ┃  ┃  state: voiceInput (0/1)      ┃  ┃  ┃
- ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
- ┃  ┃  ┃  ┏━━━━ div.bar-base ━━━━━━━━━━━━━┓  ┃  ┃
- ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
- ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
- ┃  ┃  ┏━━━━ div.box-buttons ━━━━━━━━━━━━━━━━┓  ┃
- ┃  ┃  ┃  ┏━━━━ BtnSmall #btnRewind ━━━━━━┓  ┃  ┃
- ┃  ┃  ┃  ┃  props: theme (light / dark)  ┃  ┃  ┃
- ┃  ┃  ┃  ┃  state: theme (light / dark)  ┃  ┃  ┃
- ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
- ┃  ┃  ┃  ┏━━━━ BtnSmall #btnPlayPause ━━━┓  ┃  ┃
- ┃  ┃  ┃  ┃  props: theme (light / dark)  ┃  ┃  ┃
- ┃  ┃  ┃  ┃         voiceInput (0/1)      ┃  ┃  ┃
- ┃  ┃  ┃  ┃  state: theme (light / dark)  ┃  ┃  ┃
- ┃  ┃  ┃  ┃         voiceInput (0/1)      ┃  ┃  ┃
- ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
- ┃  ┃  ┃  ┏━━━━ BtnSmall #btnSkip ━━━━━━━━┓  ┃  ┃
- ┃  ┃  ┃  ┃  props: theme (light / dark)  ┃  ┃  ┃
- ┃  ┃  ┃  ┃  state: theme (light / dark)  ┃  ┃  ┃
- ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
- ┃  ┃  ┃  ┏━━━━ BtnSmall #btnExit ━━━━━━━━┓  ┃  ┃
- ┃  ┃  ┃  ┃  props: theme (light / dark)  ┃  ┃  ┃
- ┃  ┃  ┃  ┃  state: theme (light / dark)  ┃  ┃  ┃
- ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
- ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
- ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+ ┏━━━━ baseplate ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+ ┃                                                 ┃
+ ┃  ┏━━━━ TTSComp ━━━━━━━━━━━━━━━━━━━━━━━┓         ┃
+ ┃  ┃  state: url (string)               ┃         ┃
+ ┃  ┃         name (string)              ┃         ┃
+ ┃  ┃         maxTimeout (int)           ┃         ┃
+ ┃  ┃         voiceInput (0/1)           ┃         ┃
+ ┃  ┃         playStatus (Sound.Status)  ┃         ┃
+ ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛         ┃
+ ┃                                                 ┃
+ ┃  ┏━━━━ BoxAgent ━━━━━━━━━━━━━━━━━━━━━━━━━━┓     ┃
+ ┃  ┃  ┏━━━━ ButtonAgent ━━━━━━━━━━━━━━━━━┓  ┃     ┃
+ ┃  ┃  ┃  state: voiceInput (0/1)         ┃  ┃     ┃
+ ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃     ┃
+ ┃  ┃  ┏━━━━ TextSubtitle ━━━━━━━━━━━━━━━━┓  ┃     ┃
+ ┃  ┃  ┃  state: theme (light / dark)     ┃  ┃     ┃
+ ┃  ┃  ┃         displayMessage (string)  ┃  ┃     ┃
+ ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃     ┃
+ ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛     ┃
+ ┃                                                 ┃
+ ┃  ┏━━━━ BoxImage ━━━━━━━━━━━━━━━━━━━━━━━━━━┓     ┃
+ ┃  ┃  (props:hasImage)                      ┃     ┃
+ ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛     ┃
+ ┃                                                 ┃
+ ┃  ┏━━━━ BoxController ━━━━━━━━━━━━━━━━━━━━━━━━┓  ┃
+ ┃  ┃  state: theme (light / dark)              ┃  ┃
+ ┃  ┃         voiceInput (0/1)                  ┃  ┃
+ ┃  ┃  ┏━━━━ div.box-bar ━━━━━━━━━━━━━━━━━━━━┓  ┃  ┃
+ ┃  ┃  ┃  ┏━━━━ ProgressBar ━━━━━━━━━━━━━━┓  ┃  ┃  ┃
+ ┃  ┃  ┃  ┃  state: voiceInput (0/1)      ┃  ┃  ┃  ┃
+ ┃  ┃  ┃  ┃         maxTimeout (int)      ┃  ┃  ┃  ┃
+ ┃  ┃  ┃  ┃         elapsedTime (int)     ┃  ┃  ┃  ┃
+ ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃  ┃
+ ┃  ┃  ┃  ┏━━━━ div.bar-base ━━━━━━━━━━━━━┓  ┃  ┃  ┃
+ ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃  ┃
+ ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
+ ┃  ┃  ┏━━━━ div.box-buttons ━━━━━━━━━━━━━━━━┓  ┃  ┃
+ ┃  ┃  ┃  ┏━━━━ BtnSmall #btnRewind ━━━━━━┓  ┃  ┃  ┃
+ ┃  ┃  ┃  ┃  state: theme (light / dark)  ┃  ┃  ┃  ┃
+ ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃  ┃
+ ┃  ┃  ┃  ┏━━━━ BtnSmall #btnPlayPause ━━━┓  ┃  ┃  ┃
+ ┃  ┃  ┃  ┃  state: theme (light / dark)  ┃  ┃  ┃  ┃
+ ┃  ┃  ┃  ┃         voiceInput (0/1)      ┃  ┃  ┃  ┃
+ ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃  ┃
+ ┃  ┃  ┃  ┏━━━━ BtnSmall #btnSkip ━━━━━━━━┓  ┃  ┃  ┃
+ ┃  ┃  ┃  ┃  state: theme (light / dark)  ┃  ┃  ┃  ┃
+ ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃  ┃
+ ┃  ┃  ┃  ┏━━━━ BtnSmall #btnExit ━━━━━━━━┓  ┃  ┃  ┃
+ ┃  ┃  ┃  ┃  state: theme (light / dark)  ┃  ┃  ┃  ┃
+ ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃  ┃
+ ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
+ ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 **/
@@ -131,9 +132,7 @@ function overwriteData(source, target) {
   target.epd = source.epd;
   target.answerEntity = source.answerEntity;
   target.maxTimeout = source.maxTimeout;
-  //target.duration = source.duration;
 }
-
 
 class Baseplate extends React.Component {
   constructor(props) {
@@ -147,13 +146,14 @@ class Baseplate extends React.Component {
       epd: 0,
       answerEntity: '',
       maxTimeout: 0,
-      duration: 0,
-      currentPlayTime: 0,
       voiceInput: 0,
+      elapsedTime: 0,
       theme: 'light',
-      playStatus: Sound.status.PLAYING
+      playStatus: Sound.status.STOPPED
     }
     this.voiceInputHandler = this.voiceInputHandler.bind(this);
+    this.updateState = this.updateState.bind(this);
+    this.playSound = this.playSound.bind(this);
   }
   static getDerivedStateFromProps(props, state) {
     return {
@@ -179,32 +179,50 @@ class Baseplate extends React.Component {
       epd: currentData.epd,
       answerEntity: currentData.answerEntity,
       maxTimeout: currentData.maxTimeout,
-      duration: currentData.duration,
-      currentPlayTime: 0,
       voiceInput: 0,
-      playStatus: Sound.status.PLAYING,
+      elapsedTime: 0,
+      playStatus: Sound.status.STOPPED,
     });
     console.log('redirected to next script: '+window.location);
+  }
+  stopAndSkip() {
+    this.setState({
+      theme: 'light',
+      voiceInput: 0,
+    });
+    setTimeout(() => {
+      clearInterval(this.timeoutCounter);
+      this.updateState();
+    }, 500);//
+  }
+  playSound() {
+    this.setState({
+      playStatus: Sound.status.PLAYING
+    });
   }
   voiceInputHandler() {
     //getting user turn
     if(currentData.name.match(/(prompt|feedback)/)) {
-      switch(this.state.voiceInput) {
-        case 0: //starts getting voice input
-          this.setState({
-            theme: 'dark',
-            voiceInput: 1,
-            playStatus: Sound.status.STOPPED
-          });
-          break;
-        case 1: //exceeded max timeout
+      if(this.state.voiceInput === 0) {
         this.setState({
           theme: 'dark',
+          voiceInput: 1,
+          playStatus: Sound.status.STOPPED
         });
-          setTimeout(function() {
-            this.updateState();
-          }, 500);
-          break;
+        //start timeout counter
+        const limit = this.state.maxTimeout * 1000;
+        const frequency = 100;
+        var elapsedTime = 0;
+        this.timeoutCounter = setInterval(() => {
+          if(elapsedTime < limit) {
+            elapsedTime += frequency;
+            this.setState({ elapsedTime: elapsedTime/1000 });
+            console.log('listening: ',elapsedTime/1000);
+          }
+          else {
+            this.stopAndSkip();
+          }
+        }, frequency);
       }
     }
     //pass to next target
@@ -217,11 +235,11 @@ class Baseplate extends React.Component {
       <div id="baseplate">
         <TTSComp
           name={this.state.name}
-          duration={this.state.duration}
-          currentPlayTime={this.state.currentPlayTime}
+          maxTimeout={this.state.maxTimeout}
           voiceInput={this.state.voiceInput}
           voiceInputHandler={this.voiceInputHandler}
           playStatus={this.state.playStatus}
+          playSound={this.playSound}
         />
         <BoxAgent
           voiceInput={this.state.voiceInput}
@@ -229,8 +247,16 @@ class Baseplate extends React.Component {
           displayMessage={this.state.displayMessage}
           voiceInputHandler={this.voiceInputHandler}
         />
+        <BoxImage
+          name={this.state.name}
+          hasImage={this.state.hasImage}
+          theme={this.state.theme}
+        />
         <BoxController
           theme={this.state.theme}
+          maxTimeout={this.state.maxTimeout}
+          voiceInput={this.state.voiceInput}
+          elapsedTime={this.state.elapsedTime}
           voiceInputHandler={this.voiceInputHandler}
         />
       </div>
@@ -243,33 +269,25 @@ class TTSComp extends React.Component {
     super(props);
     this.state = {
       voiceInput: 0,
-      playStatus: Sound.status.PAUSED
+      playStatus: Sound.status.STOPPED,
     }
   }
   static getDerivedStateFromProps(props, state) {
     return {
       url: 'tts/'+props.name+'.mp3',
       name: props.name,
-      duration: props.duration,
-      currentPlayTime: props.currentPlayTime,
+      maxTimeout: props.maxTimeout,
       voiceInput: props.voiceInput,
-      playStatus: props.playStatus
+      playStatus: props.playStatus,
     };
   }
-  /*
-  playStatusHandler = () => {
-    this.setStthis.state.voiceInput === 1 ? Sound.status.PAUSED : Sound.status.PLAYING;
-  }
-  */
   render() {
     return(
       <Sound
         url={this.state.url}
         autoLoad={true}
-        //playStatus={Sound.status.PLAYING}
+        onLoad={this.props.playSound}
         playStatus={this.state.playStatus}
-        //onLoading={this.handleSongLoading}
-        //onPlaying={this.handleSongPlaying}
         onFinishedPlaying={this.props.voiceInputHandler}
       />
     );
@@ -373,6 +391,46 @@ class TextSubtitle extends React.Component {
 
 
 
+
+/* * * * * * * * * * * * * * * *
+ * Image If needed  *
+ * * * * * * * * * * * * * * * */
+
+class BoxImage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      theme: 'light',
+    }
+  }
+  static getDerivedStateFromProps(props, state) {
+    return {
+      theme: props.theme,
+      name: props.name,
+    };
+  }
+  onError = () => {
+    this.setState({
+      name: 'none',
+    });
+  }
+  render() {
+    return(
+      <div className={'box-image'}>
+        <img
+          className={'image theme-'+this.state.theme}
+          src={'./img/'+this.state.name+'.png'}
+          //src={'./img/TASK_J2_03_prompt_1.png'}
+          onError={this.onError}
+          alt={''}
+        ></img>
+      </div>
+    );
+  }
+}
+
+
+
 /* * * * * * * * * * * * * * * *
  * BoxController and children  *
  * * * * * * * * * * * * * * * */
@@ -396,6 +454,11 @@ class BoxController extends React.Component {
     return(
       <div className="box-controller">
         <div className="box-bar">
+          <ProgressBar
+            voiceInput={this.state.voiceInput}
+            elapsedTime={this.props.elapsedTime}
+            maxTimeout={this.props.maxTimeout}
+          />
           <div className={"bar bar-base theme-"+this.state.theme}
           onClick={this.setTheme}></div>
         </div>
@@ -412,7 +475,33 @@ class BoxController extends React.Component {
     );
   }
 }
-
+class ProgressBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      voiceInput: 0
+    }
+  }
+  static getDerivedStateFromProps(props, state) {
+    return {
+      voiceInput: props.voiceInput,
+      elapsedTime: props.elapsedTime,
+    };
+  }
+  getWidth = () => {
+    let limit = this.props.maxTimeout;
+    let percentage = (this.state.elapsedTime / limit) * 100 + '%';
+    return percentage;
+  }
+  render() {
+    return (
+      <div
+        className={"bar bar-progress"}
+        style={{width: this.getWidth()}}
+      ></div>
+    );
+  }
+}
 class ButtonSmall extends React.Component {
   constructor(props) {
     super(props);

@@ -1,6 +1,146 @@
 {
   "list":[
     {
+    "name": "INST_INTRO_01_statement_1",
+    "message": "안녕하세요, 어르신. 만나뵈서 반갑습니다. 제 이름은 아레떼 입니다. 지금부터 저와 몇가지 질문을 주고 받으며 어르신께 치매가 진행되고 있는지를 알아 볼 것입니다.",
+    "displayMessage": "반갑습니다!",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 0,
+    "answerEntity": "",
+    "maxTimeout": 0
+    },
+    {
+    "name": "INST_TUT1_01_statement_1",
+    "message": "저는 똑똑하지 못해서 듣거나 말하거나 중 한번에 하나만 할 수 있어요. 제가 어르신 말씀을 듣고 있을 때는, 화면이 파란색으로 변할거고요, 지금처럼 제가 말하고 있을 때는, 흰색으로 유지될 거에요.",
+    "displayMessage": "반갑습니다!",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 0,
+    "answerEntity": "",
+    "maxTimeout": 0
+    },
+    {
+    "name": "INST_TUT1_02_prompt_1",
+    "message": "그럼, 저와 손발을 한번 맞춰 볼까요? 화면이 파란색으로 변하면 '알았어'라고 말씀해 보세요.",
+    "displayMessage": "파란불이 들어오면 '알았어'라고 말씀해 보세요.",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 10,
+    "answerEntity": "entity_yes",
+    "maxTimeout": 10
+    },
+    {
+    "name": "INST_TUT1_03_retrial_1",
+    "message": "다시한 번 해 볼까요? 화면이 파란색으로 변하면 '알았어'라고 말씀해 보세요.",
+    "displayMessage": "파란불이 들어오면 '알았어'라고 말씀해 보세요.",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 10,
+    "answerEntity": "entity_yes",
+    "maxTimeout": 10
+    },
+    {
+    "name": "INST_TUT1_03_retrial_2",
+    "message": "음, 제가 잘 못들은 것 같네요. 다시한 번 화면이 파란색으로 변하면 '알았어'라고 말씀해 주시겠어요?",
+    "displayMessage": "파란불이 들어오면 '알았어'라고 말씀해 보세요.",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 10,
+    "answerEntity": "entity_yes",
+    "maxTimeout": 10
+    },
+    {
+    "name": "INST_TUT1_04_fallback_1",
+    "message": "음, 아직 준비가 덜 되신 것 같네요. 다음에 다시 저를 불러주세요~",
+    "displayMessage": "다음에 다시 저를 불러주세요~",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 0,
+    "answerEntity": "",
+    "maxTimeout": 0
+    },
+    {
+    "name": "INST_TUT1_05_statement_1",
+    "message": "네, 잘 하셨어요. 앞으로 그렇게 해 주시면 됩니다.",
+    "displayMessage": "네, 잘 하셨어요",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 0,
+    "answerEntity": "",
+    "maxTimeout": 0
+    },
+    {
+    "name": "INST_TUT2_01_statement_1",
+    "message": "앞으로 제가 할 질문은 쉬운 것도 있고 어려운 것도 있습니다. 어떤 건 저한테도 어렵더군요. 어려운 질문을 드리더라도 최대한 생각나는 대로 말씀해주시길 부탁드릴게요.",
+    "displayMessage": "",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 0,
+    "answerEntity": "",
+    "maxTimeout": 0
+    },
+    {
+    "name": "INST_TUT2_02_statement_1",
+    "message": "중간에 그만 하시고 싶으시면 '끝내기' 라고 말씀해 주세요. 나중에 다시 이어서 하실 수 있습니다.",
+    "displayMessage": "",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 0,
+    "answerEntity": "",
+    "maxTimeout": 0
+    },
+    {
+    "name": "INST_TUT2_03_prompt_1",
+    "message": "한번 연습해 볼까요? 화면이 파란색으로 변하면 '끝내기'라고 말씀해 보세요.",
+    "displayMessage": "",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 10,
+    "answerEntity": "entity_quit",
+    "maxTimeout": 10
+    },
+    {
+    "name": "INST_TUT2_04_retrial_1",
+    "message": "다시한 번 해 볼까요? 화면이 파란색으로 변하면 '끝내기'라고 말씀해 보세요.",
+    "displayMessage": "",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 10,
+    "answerEntity": "entity_quit",
+    "maxTimeout": 10
+    },
+    {
+    "name": "INST_TUT2_04_retrial_2",
+    "message": "음, 제가 잘 못들은 것 같네요. 다시한 번 화면이 파란색으로 변하면 '끝내기'라고 말씀해 주시겠어요?",
+    "displayMessage": "",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 10,
+    "answerEntity": "entity_quit",
+    "maxTimeout": 10
+    },
+    {
+    "name": "INST_TUT2_05_fallback_1",
+    "message": "그만하고 싶으실 때는 화면이 파랗게 변했을 때 '끝내기'라고 말씀하시면 된다는 것, 기억해 주세요.",
+    "displayMessage": "",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 0,
+    "answerEntity": "",
+    "maxTimeout": 0
+    },
+    {
+    "name": "INST_START_01_statement_1",
+    "message": "이제 본격적으로 질문을 드리겠습니다.",
+    "displayMessage": "",
+    "displayOnly": 0,
+    "hasImage": 0,
+    "epd": 0,
+    "answerEntity": "",
+    "maxTimeout": 0
+    },
+    {
       "name": "TASK_J2_01_statement_1",
       "message": "지금부터 몇 개의 그림이 표시될 것입니다. 그림은 한번에 하나씩 나옵니다. 각 그림의 이름을 말해 주시면 됩니다.",
       "displayMessage": "그림의 이름을 말해주세요.",
@@ -295,7 +435,7 @@
       "message": "시작해주세요.",
       "displayMessage": "화면에 나오는 문장을 따라 읽어주세요.",
       "displayOnly": 1,
-      "hasImage": 0,
+      "hasImage": 1,
       "epd": 15,
       "answerEntity": "entity_a1",
       "maxTimeout": 15
@@ -305,7 +445,89 @@
       "message": "읽어주세요.",
       "displayMessage": "화면에 나오는 문장을 따라 읽어주세요.",
       "displayOnly": 1,
-      "hasImage": 0,
+      "hasImage": 1,
+      "epd": 15,
+      "answerEntity": "entity_a1",
+      "maxTimeout": 15
+    },
+
+
+    {
+      "name": "TASK_A2_04_prompt_1",
+      "message": "시작해주세요.",
+      "displayMessage": "화면에 나오는 문장을 따라 읽어주세요.",
+      "displayOnly": 1,
+      "hasImage": 1,
+      "epd": 15,
+      "answerEntity": "entity_a1",
+      "maxTimeout": 15
+    },
+    {
+      "name": "TASK_A2_05_prompt_1",
+      "message": "읽어주세요.",
+      "displayMessage": "화면에 나오는 문장을 따라 읽어주세요.",
+      "displayOnly": 1,
+      "hasImage": 1,
+      "epd": 15,
+      "answerEntity": "entity_a1",
+      "maxTimeout": 15
+    },
+    {
+      "name": "TASK_A2_06_prompt_1",
+      "message": "시작해주세요.",
+      "displayMessage": "화면에 나오는 문장을 따라 읽어주세요.",
+      "displayOnly": 1,
+      "hasImage": 1,
+      "epd": 15,
+      "answerEntity": "entity_a1",
+      "maxTimeout": 15
+    },
+    {
+      "name": "TASK_A2_07_prompt_1",
+      "message": "읽어주세요.",
+      "displayMessage": "화면에 나오는 문장을 따라 읽어주세요.",
+      "displayOnly": 1,
+      "hasImage": 1,
+      "epd": 15,
+      "answerEntity": "entity_a1",
+      "maxTimeout": 15
+    },
+    {
+      "name": "TASK_A2_08_prompt_1",
+      "message": "시작해주세요.",
+      "displayMessage": "화면에 나오는 문장을 따라 읽어주세요.",
+      "displayOnly": 1,
+      "hasImage": 1,
+      "epd": 15,
+      "answerEntity": "entity_a1",
+      "maxTimeout": 15
+    },
+    {
+      "name": "TASK_A2_09_prompt_1",
+      "message": "읽어주세요.",
+      "displayMessage": "화면에 나오는 문장을 따라 읽어주세요.",
+      "displayOnly": 1,
+      "hasImage": 1,
+      "epd": 15,
+      "answerEntity": "entity_a1",
+      "maxTimeout": 15
+    },
+    {
+      "name": "TASK_A2_10_prompt_1",
+      "message": "시작해주세요.",
+      "displayMessage": "화면에 나오는 문장을 따라 읽어주세요.",
+      "displayOnly": 1,
+      "hasImage": 1,
+      "epd": 15,
+      "answerEntity": "entity_a1",
+      "maxTimeout": 15
+    },
+    {
+      "name": "TASK_A2_11_prompt_1",
+      "message": "읽어주세요.",
+      "displayMessage": "화면에 나오는 문장을 따라 읽어주세요.",
+      "displayOnly": 1,
+      "hasImage": 1,
       "epd": 15,
       "answerEntity": "entity_a1",
       "maxTimeout": 15

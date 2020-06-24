@@ -60,6 +60,7 @@
   --color-silver: rgba(0, 23, 85, 0.05);
   --color-lightgray: rgba(0, 23, 85, 0.2);
   --color-white: #ffffff;
+  --color-ghost: rgba(255, 255, 255, 0.6);
   --lineheight-subtitle: calc(32/24);
   --size-icon: 40px;
   --size-font-subtitle: 24px;
@@ -69,12 +70,20 @@
   --size-button-s: 64px;
   --size-button-m: 80px;
   --size-button-l: 200px;
+  --size-image-height: calc(100vh -
+    (var(--size-button-m) + var(--magrin-boxtop)*2 +
+    var(--margin-bar)*2 + var(--size-bar) +
+    var(--size-button-s) +
+    var(--margin-button) + var(--margin-boxbottom))
+  );
   --margin-bar: 20px;
   --margin-button: 16px;
   --margin-base: 32px;
   --magrin-boxtop: 56px;
+  --margin-imagebox: calc(var(--size-button-m) + var(--magrin-boxtop)*2);
   --margin-boxbottom: 50px;
   --speed-normal: 0.5s;
+  --speed-fast: 0.1s;
 }
 @media screen and (min-width: 640px) {
   :root {
@@ -149,7 +158,7 @@ body {
   position: relative;
   width: var(--size-base);
   height: 100vh;
-  overflow: visible;
+  overflow: hidden;
   box-sizing: border-box;
   padding: 0 var(--margin-base);
   margin: 0 auto;
@@ -163,6 +172,31 @@ body {
   font-size: var(--size-font-subtitle) ;
   line-height: 1.33;
   z-index: 1;
+}
+.box-image {
+  position: fixed;
+  top: var(--margin-imagebox);
+  width: calc(var(--size-base) - 2*var(--margin-base));
+  height: 0;
+}
+.image {
+  position: absolute;
+  left: 50%;
+  /*width: 100%;*/
+  width: calc(var(--size-base) - 2*var(--margin-base));
+  max-width: var(--size-image-height);
+  height: auto;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background: transparent !important;
+}
+.image.theme-light {
+  -webkit-filter: invert(0);
+  filter: invert(0);
+}
+.image.theme-dark {
+  -webkit-filter: invert(1);
+  filter: invert(1);
 }
 .box-controller {
   position: fixed;
@@ -182,6 +216,15 @@ body {
   width: 100%;
   height: var(--size-bar);
   border-radius: calc(100*100vw);
+}
+.bar-progress {
+  position: absolute;
+  width: 0;
+  top: var(--margin-bar);
+  left: 0;
+  background-color: var(--color-ghost);
+  -webkit-transition: width var(--speed-fast);
+  transition: width var(--speed-fast);
 }
 
 button {
