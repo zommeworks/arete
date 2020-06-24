@@ -1,4 +1,5 @@
 import React from 'react';
+import Sound from 'react-sound';
 import styles from './App.css';
 import data from './testscript.json'
 import $ from 'jquery';
@@ -13,26 +14,26 @@ import $ from 'jquery';
  ┃  ┗━━━━━━━━┛  ┃
  ┃  ┏━━━━ BoxAgent ━━━━━━━━━━━━━━━━━━━━━┓
  ┃  ┃  ┏━━━━ ButtonAgent ━━━━━━━━━━━━┓  ┃
- ┃  ┃  ┃  props: playStatus (0/1/2)  ┃  ┃
- ┃  ┃  ┃  state: playStatus (0/1/2)  ┃  ┃
+ ┃  ┃  ┃  props: voiceInput (0/1)    ┃  ┃
+ ┃  ┃  ┃  state: voiceInput (0/1)    ┃  ┃
  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
  ┃  ┃  ┏━━━━ TextSubtitle ━━━━━━━━━━━┓  ┃
  ┃  ┃  ┃  props: text (string)       ┃  ┃
- ┃  ┃  ┃         playStatus (0/1/2)  ┃  ┃
- ┃  ┃  ┃  state: playStatus (0/1/2)  ┃  ┃
+ ┃  ┃  ┃         voiceInput (0/1)    ┃  ┃
+ ┃  ┃  ┃  state: voiceInput (0/1)    ┃  ┃
  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
  ┃
  ┃  ┏━━━━ BoxController ━━━━━━━━━━━━━━━━━━━━━━━━┓
  ┃  ┃  props: theme (light / dark)              ┃
- ┃  ┃         playStatus (0/1/2)                ┃
+ ┃  ┃         voiceInput (0/1)                  ┃
  ┃  ┃  state: theme (light / dark)              ┃
- ┃  ┃         playStatus (0/1/2)                ┃
+ ┃  ┃         voiceInput (0/1)                  ┃
  ┃  ┃  ┏━━━━ div.box-bar ━━━━━━━━━━━━━━━━━━━━┓  ┃
  ┃  ┃  ┃  ┏━━━━ ProgressBar ━━━━━━━━━━━━━━┓  ┃  ┃
- ┃  ┃  ┃  ┃  props: playStatus (0/1/2)    ┃  ┃  ┃
+ ┃  ┃  ┃  ┃  props: voiceInput (0/1)      ┃  ┃  ┃
  ┃  ┃  ┃  ┃         maxTimeout (int)      ┃  ┃  ┃
- ┃  ┃  ┃  ┃  state: playStatus (0/1/2)    ┃  ┃  ┃
+ ┃  ┃  ┃  ┃  state: voiceInput (0/1)      ┃  ┃  ┃
  ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
  ┃  ┃  ┃  ┏━━━━ div.bar-base ━━━━━━━━━━━━━┓  ┃  ┃
  ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
@@ -44,9 +45,9 @@ import $ from 'jquery';
  ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
  ┃  ┃  ┃  ┏━━━━ BtnSmall #btnPlayPause ━━━┓  ┃  ┃
  ┃  ┃  ┃  ┃  props: theme (light / dark)  ┃  ┃  ┃
- ┃  ┃  ┃  ┃         playStatus (0/1/2)    ┃  ┃  ┃
+ ┃  ┃  ┃  ┃         voiceInput (0/1)      ┃  ┃  ┃
  ┃  ┃  ┃  ┃  state: theme (light / dark)  ┃  ┃  ┃
- ┃  ┃  ┃  ┃         playStatus (0/1/2)    ┃  ┃  ┃
+ ┃  ┃  ┃  ┃         voiceInput (0/1)      ┃  ┃  ┃
  ┃  ┃  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃  ┃
  ┃  ┃  ┃  ┏━━━━ BtnSmall #btnSkip ━━━━━━━━┓  ┃  ┃
  ┃  ┃  ┃  ┃  props: theme (light / dark)  ┃  ┃  ┃
@@ -60,14 +61,6 @@ import $ from 'jquery';
  ┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-
- props and states
-
- playStatus:
-  0: null,
-  1: audio ready,
-  2: playing,
-  3: audio end
 **/
 
 
@@ -76,86 +69,59 @@ import $ from 'jquery';
  * global variables  *
  * * * * * * * * * * */
 
-const currentData = {};
-const nextData = {};
-var ttsBuffer = null;
-var sfxBuffer = null;
-// webAudioAPI Fix up prefixing
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-var context = new AudioContext();
+var currentData = {};
+var nextDataName = '';
 
 
-
-/* * * * * * * * * * * * *
- * webAudioAPI functions *
- * * * * * * * * * * * * */
-
-function initAudio() {
-  try {
-    // Fix up for prefixing
-    window.AudioContext = window.AudioContext||window.webkitAudioContext;
-    context = new AudioContext();
-  }
-  catch(e) {
-    alert('Web Audio API is not supported in this browser');
-  }
-}
-
-function loadSound(filename, type) {
-  var request = new XMLHttpRequest();
-  var url;
-  if(type === 'tts') {
-    url = '../src/tts/'+filename+'.mp3';
-  }
-  else {
-    url = '../src/sfx/'+filename+'.wav';
-  }
-  request.open('GET', url, true);
-  request.responseType = 'arraybuffer';
-  // Decode asynchronously
-  request.onload = function() {
-    context.decodeAudioData(request.response, function(buffer) {
-      if(type === 'tts') {
-          ttsBuffer = buffer;
-      }
-      else {
-        sfxBuffer = buffer;
-      }
-    }, onError);
-  }
-  request.send();
-}
-
-function onError(e) {
-  console.log("error loading an audio file.", e);
-}
-
-function playSound(buffer) {
-  var source = context.createBufferSource(); // creates a sound source
-  source.buffer = buffer;                    // tell the source which sound to play
-  source.connect(context.destination);       // connect the source to the context's destination (the speakers)
-  source.start(0);                           // play the source now
-                                             // note: on older systems, may have to use deprecated noteOn(time);
-}
-
-/* execution */
 
 //functions
+
 function initData(){
   try {
-    let docID = window.location.hash.split('#');
+    let docID = getUrlParams().name;
     $.each(data.list, function(i){
-      if(data.list[i].name === docID[1]){
+      if(data.list[i].name === docID){
         overwriteData(data.list[i], currentData);
-        if(data.list[i].name.match(/(prompt|statement)/)) {
-        }
       }
     });
   }
   catch(e) {
     alert('failed to load data');
   }
+  nextDataName = getnextDataName();
 }
+
+function initNext() {
+  $.each(data.list, function(i){
+    if(data.list[i].name === nextDataName){
+      overwriteData(data.list[i], currentData);
+    }
+  });
+  nextDataName = getnextDataName();
+}
+
+function getnextDataName() {
+  let j;
+  for(let i = 0; i < data.list.length; i++){
+    if(data.list[i].name === currentData.name){
+      j = i+1;
+      break;
+    }
+  }
+  for(j; j < data.list.length; j++){
+    if(data.list[j].name.match(/(prompt|statement)/)) {
+      return data.list[j].name;
+      break;
+    }
+  }
+}
+
+function getUrlParams() {
+    var params = {};
+    window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+    return params;
+}
+
 function overwriteData(source, target) {
   target.name = source.name;
   target.message = source.message;
@@ -167,6 +133,7 @@ function overwriteData(source, target) {
   target.maxTimeout = source.maxTimeout;
   //target.duration = source.duration;
 }
+
 
 class Baseplate extends React.Component {
   constructor(props) {
@@ -182,10 +149,11 @@ class Baseplate extends React.Component {
       maxTimeout: 0,
       duration: 0,
       currentPlayTime: 0,
-      playStatus: 0,
-      theme: 'light'
+      voiceInput: 0,
+      theme: 'light',
+      playStatus: Sound.status.PLAYING
     }
-    this.handler = this.handler.bind(this);
+    this.voiceInputHandler = this.voiceInputHandler.bind(this);
   }
   static getDerivedStateFromProps(props, state) {
     return {
@@ -199,18 +167,49 @@ class Baseplate extends React.Component {
       maxTimeout: props.maxTimeout,
     };
   }
-  handler() {
-    if(this.state.playStatus === 2) {
-      this.setState({
-        playStatus: 3,
-        theme: 'light'
-      });
+  updateState() {
+    window.location.href = '?name=' + nextDataName;//
+    initNext();
+    this.setState({
+      name: currentData.name,
+      message: currentData.message,
+      displayMessage: currentData.displayMessage,
+      displayOnly: currentData.displayOnly,
+      hasImage: currentData.hasImage,
+      epd: currentData.epd,
+      answerEntity: currentData.answerEntity,
+      maxTimeout: currentData.maxTimeout,
+      duration: currentData.duration,
+      currentPlayTime: 0,
+      voiceInput: 0,
+      playStatus: Sound.status.PLAYING,
+    });
+    console.log('redirected to next script: '+window.location);
+  }
+  voiceInputHandler() {
+    //getting user turn
+    if(currentData.name.match(/(prompt|feedback)/)) {
+      switch(this.state.voiceInput) {
+        case 0: //starts getting voice input
+          this.setState({
+            theme: 'dark',
+            voiceInput: 1,
+            playStatus: Sound.status.STOPPED
+          });
+          break;
+        case 1: //exceeded max timeout
+        this.setState({
+          theme: 'dark',
+        });
+          setTimeout(function() {
+            this.updateState();
+          }, 500);
+          break;
+      }
     }
-    else {
-      this.setState({
-        playStatus: 2,
-        theme: 'dark'
-      });
+    //pass to next target
+    else if(currentData.name.match(/statement/)) {
+      this.updateState();
     }
   }
   render() {
@@ -220,23 +219,62 @@ class Baseplate extends React.Component {
           name={this.state.name}
           duration={this.state.duration}
           currentPlayTime={this.state.currentPlayTime}
+          voiceInput={this.state.voiceInput}
+          voiceInputHandler={this.voiceInputHandler}
           playStatus={this.state.playStatus}
         />
         <BoxAgent
-          playStatus={this.state.playStatus}
+          voiceInput={this.state.voiceInput}
           theme={this.state.theme}
           displayMessage={this.state.displayMessage}
-          handler={this.handler}
+          voiceInputHandler={this.voiceInputHandler}
         />
         <BoxController
           theme={this.state.theme}
-          handler={this.handler}
+          voiceInputHandler={this.voiceInputHandler}
         />
       </div>
     );
   }
 }
 
+class TTSComp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      voiceInput: 0,
+      playStatus: Sound.status.PAUSED
+    }
+  }
+  static getDerivedStateFromProps(props, state) {
+    return {
+      url: 'tts/'+props.name+'.mp3',
+      name: props.name,
+      duration: props.duration,
+      currentPlayTime: props.currentPlayTime,
+      voiceInput: props.voiceInput,
+      playStatus: props.playStatus
+    };
+  }
+  /*
+  playStatusHandler = () => {
+    this.setStthis.state.voiceInput === 1 ? Sound.status.PAUSED : Sound.status.PLAYING;
+  }
+  */
+  render() {
+    return(
+      <Sound
+        url={this.state.url}
+        autoLoad={true}
+        //playStatus={Sound.status.PLAYING}
+        playStatus={this.state.playStatus}
+        //onLoading={this.handleSongLoading}
+        //onPlaying={this.handleSongPlaying}
+        onFinishedPlaying={this.props.voiceInputHandler}
+      />
+    );
+  }
+}
 
 
 
@@ -248,14 +286,14 @@ class BoxAgent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      playStatus: 0,
+      voiceInput: 0,
       theme: 'light',
       displayMessage: "dummy text"
     };
   }
   static getDerivedStateFromProps(props, state) {
     return {
-      playStatus: props.playStatus,
+      voiceInput: props.voiceInput,
       theme: props.theme,
       displayMessage: props.displayMessage
     };
@@ -264,8 +302,8 @@ class BoxAgent extends React.Component {
     return(
       <div className="box-agent">
         <ButtonAgent
-          playStatus={this.state.playStatus}
-          handler={this.props.handler}
+          voiceInput={this.state.voiceInput}
+          voiceInputHandler={this.props.voiceInputHandler}
         />
         <TextSubtitle theme={this.state.theme} displayMessage={this.state.displayMessage}/>
       </div>
@@ -277,24 +315,20 @@ class ButtonAgent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      playStatus: 0,
+      voiceInput: 0,
     };
   }
   static getDerivedStateFromProps(props, state) {
     return {
-      playStatus: props.playStatus
+      voiceInput: props.voiceInput
     };
   }
   setButtonStatus = (param) => {
     switch(param) {
-      case 0: //audio is not loaded
+      case 0:
         return 'idle';
-      case 1: //audio is ready
-        return 'idle';
-      case 2: //audio is playing
+      case 1:
         return 'listening';
-      case 3: //audio ended
-        return 'idle';
       default:
         return 'idle';
     }
@@ -303,8 +337,8 @@ class ButtonAgent extends React.Component {
     return(
       <button
         id="btnAgent"
-        className={"button-agent status-"+this.setButtonStatus(this.state.playStatus)}
-        onClick={this.props.handler}
+        className={"button-agent status-"+this.setButtonStatus(this.state.voiceInput)}
+        onClick={this.props.voiceInputHandler}
       >
       </button>
     );
@@ -337,36 +371,7 @@ class TextSubtitle extends React.Component {
   }
 }
 
-class TTSComp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      duration: 0,
-      currentPlayTime: 0,
-      playStatus: 0
-    }
-  }
-  static getDerivedStateFromProps(props, state) {
-    return {
-      name: props.name,
-      duration: props.duration,
-      currentPlayTime: props.currentPlayTime,
-      playStatus: props.playStatus
-    };
-  }
-  componentDidMount() {
-    loadSound('sft_listening', 'sfx');
-  }
-  render() {
-    return(
-      <audio
-        id={this.state.name}
-        src={'../src/tts/'+this.state.name+'.mp3'}
-      />
-    );
-  }
-}
+
 
 /* * * * * * * * * * * * * * * *
  * BoxController and children  *
@@ -439,18 +444,18 @@ class ButtonSmall extends React.Component {
 
 
 function App() {
-  initAudio();
   initData();
-  const element = <Baseplate
-    name={currentData.name}
-    message={currentData.message}
-    displayMessage={currentData.displayMessage}
-    displayOnly={currentData.displayOnly}
-    hasImage={currentData.hasImage}
-    epd={currentData.epd}
-    answerEntity={currentData.answerEntity}
-    maxTimeout={currentData.maxTimeout}
-  />;
+  const element =
+    <Baseplate
+      name={currentData.name}
+      message={currentData.message}
+      displayMessage={currentData.displayMessage}
+      displayOnly={currentData.displayOnly}
+      hasImage={currentData.hasImage}
+      epd={currentData.epd}
+      answerEntity={currentData.answerEntity}
+      maxTimeout={currentData.maxTimeout}
+    />;
   return(element);
 }
 export default App;
